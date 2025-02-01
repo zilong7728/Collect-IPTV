@@ -1,0 +1,28 @@
+name: IPTV Scraper & M3U Updater
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"  # 每 6 小时运行一次
+  push:
+    branches:
+      - main
+
+jobs:
+  update-iptv:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码仓库
+      uses: actions/checkout@v2
+
+    - name: 安装必要工具
+      run: sudo apt-get update && sudo apt-get install -y ffmpeg wget
+
+    - name: 运行 IPTV 处理脚本
+      run: bash scrape_test_merge.sh
+
+    - name: 提交并推送更新的 M3U 文件
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "更新 IPTV M3U"
+        file_pattern: "playlist.m3u"
