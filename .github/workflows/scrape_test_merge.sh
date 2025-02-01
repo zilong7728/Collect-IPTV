@@ -2,8 +2,12 @@
 
 # 1. 配置 IPTV 资源地址
 IPTV_SOURCES=(
-    "https://example.com/source1.m3u"
-    "https://example.com/source2.m3u"
+    "https://live.zbds.top/tv/iptv6.m3u"  
+    "https://live.zbds.top/tv/iptv4.m3u"  
+    "https://live.kilvn.com/iptv.m3u"    
+    "https://m3u.ibert.me/fmml_ipv6.m3u"    
+    "http://wx.thego.cn/ak.m3u"    
+    "http://aktv.top/live.txt"    
 )
 TMP_DIR="iptv_tmp"
 OUTPUT_FILE="playlist.m3u"
