@@ -19,7 +19,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y ffmpeg wget
 
     - name: 运行 IPTV 处理脚本
-      run: bash scrape_test_merge.sh    
+      run: bash ./scrape_test_merge.sh      
 
     - name: 提交并推送更新的 M3U 文件
       uses: stefanzweifel/git-auto-commit-action@v5
