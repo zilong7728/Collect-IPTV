@@ -15,7 +15,7 @@ CONFIG = {
 
 
 # 读取 CCTV 频道列表
-def load_cctv_channels(file_path="IPTV/CCTV.txt"):
+def load_cctv_channels(file_path=".github/workflows/IPTV/CCTV.txt"):
     """从文件加载 CCTV 频道列表"""
     cctv_channels = set()
     try:
@@ -266,42 +266,42 @@ if __name__ == "__main__":
     ]
 
     # CCTV 频道文件（例如 IPTV/CCTV.txt）
-    cctv_channel_file = "IPTV/CCTV.txt"
+    cctv_channel_file = ".github/workflows/IPTV/CCTV.txt"
 
     # 省份频道文件列表
     province_channel_files = [
-        "IPTV/重庆频道.txt",
-        "IPTV/四川频道.txt",
-        "IPTV/云南频道.txt",
-        "IPTV/安徽频道.txt",
-        "IPTV/福建频道.txt",
-        "IPTV/甘肃频道.txt",
-        "IPTV/广东频道.txt",
-        "IPTV/广西频道.txt",
-        "IPTV/贵州频道.txt",
-        "IPTV/海南频道.txt",
-        "IPTV/河北频道.txt",
-        "IPTV/河南频道.txt",
-        "IPTV/黑龙江频道.txt",
-        "IPTV/湖北频道.txt",
-        "IPTV/湖南频道.txt",
-        "IPTV/吉林频道.txt",
-        "IPTV/江苏频道.txt",
-        "IPTV/江西频道.txt",
-        "IPTV/辽宁频道.txt",
-        "IPTV/内蒙频道.txt",
-        "IPTV/宁夏频道.txt",
-        "IPTV/青海频道.txt",
-        "IPTV/山东频道.txt",
-        "IPTV/山西频道.txt",
-        "IPTV/陕西频道.txt",
-        "IPTV/上海频道.txt",
-        "IPTV/天津频道.txt",
-        "IPTV/卫视频道.txt",
-        "IPTV/新疆频道.txt",
-        "IPTV/云南频道.txt",
-        "IPTV/浙江频道.txt",
-        "IPTV/北京频道.txt"
+        ".github/workflows/IPTV/重庆频道.txt",
+        ".github/workflows/IPTV/四川频道.txt",
+        ".github/workflows/IPTV/云南频道.txt",
+        ".github/workflows/IPTV/安徽频道.txt",
+        ".github/workflows/IPTV/福建频道.txt",
+        ".github/workflows/IPTV/甘肃频道.txt",
+        ".github/workflows/IPTV/广东频道.txt",
+        ".github/workflows/IPTV/广西频道.txt",
+        ".github/workflows/IPTV/贵州频道.txt",
+        ".github/workflows/IPTV/海南频道.txt",
+        ".github/workflows/IPTV/河北频道.txt",
+        ".github/workflows/IPTV/河南频道.txt",
+        ".github/workflows/IPTV/黑龙江频道.txt",
+        ".github/workflows/IPTV/湖北频道.txt",
+        ".github/workflows/IPTV/湖南频道.txt",
+        ".github/workflows/IPTV/吉林频道.txt",
+        ".github/workflows/IPTV/江苏频道.txt",
+        ".github/workflows/IPTV/江西频道.txt",
+        ".github/workflows/IPTV/辽宁频道.txt",
+        ".github/workflows/IPTV/内蒙频道.txt",
+        ".github/workflows/IPTV/宁夏频道.txt",
+        ".github/workflows/IPTV/青海频道.txt",
+        ".github/workflows/IPTV/山东频道.txt",
+        ".github/workflows/IPTV/山西频道.txt",
+        ".github/workflows/IPTV/陕西频道.txt",
+        ".github/workflows/IPTV/上海频道.txt",
+        ".github/workflows/IPTV/天津频道.txt",
+        ".github/workflows/IPTV/卫视频道.txt",
+        ".github/workflows/IPTV/新疆频道.txt",
+        ".github/workflows/IPTV/云南频道.txt",
+        ".github/workflows/IPTV/浙江频道.txt",
+        ".github/workflows/IPTV/北京频道.txt"
     ]
 
     # 执行主函数
