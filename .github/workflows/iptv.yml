@@ -30,10 +30,13 @@ jobs:
         TZ="Asia/Shanghai"
         echo "exec_time=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_OUTPUT
 
-    - name: Update README
+    - name: Update README.md with run time and file link
       run: |
-        sed -i "s/最后运行时间：.*/最后运行时间：${{ steps.time.outputs.exec_time }}/g" README.md
-        sed -i "s|文件链接：.*|文件链接：https://github.com/${{ github.repository }}/raw/main/best_sorted.m3u|g" README.md
+        current_time=$(date +"%Y-%m-%d %H:%M:%S")
+        file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
+        sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
+        sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
+       
 
     - name: Commit changes
       env:
