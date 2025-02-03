@@ -1,28 +1,42 @@
-name: IPTV Scraper & M3U Updater
+name: Scrape and Update README
 
 on:
   schedule:
-    - cron: "0 */6 * * *"  # 每 6 小时运行一次
-  push:
-    branches:
-      - main
+    - cron: '0 8,20 * * *'  # 每日8点和20点运行一次
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
-  update-iptv:
+  scrape:
     runs-on: ubuntu-latest
-
     steps:
-    - name: 检出代码仓库
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: 安装必要工具
-      run: sudo apt-get update && sudo apt-get install -y ffmpeg wget
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  # 或你所需要的 Python 版本
 
-    - name: 运行 IPTV 处理脚本
-      run: bash scrape_test_merge.sh        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # 确保依赖已安装
 
-    - name: 提交并推送更新的 M3U 文件
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "更新 IPTV M3U"
-        file_pattern: "playlist.m3u"
+      - name: Run scrape_test_merge.py
+        run: |
+          python scrape_test_merge.py  # 执行你的文件
+
+      - name: Update README.md with run time and file link
+        run: |
+          current_time=$(date +"%Y-%m-%d %H:%M:%S")
+          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/generated_file.csv"  # 假设生成的文件是 CSV
+          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
+          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
+
+      - name: Commit changes to README
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update README with last run time and generated file link"
+          git push
