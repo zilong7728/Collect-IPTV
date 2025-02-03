@@ -15,23 +15,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'  # 或你所需要的 Python 版本
+          python-version: '3.8'  # 你可以选择合适的 Python 版本
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # 确保依赖已安装
+          pip install aiohttp  # 安装 aiohttp
+          pip install asyncio  # 安装 asyncio
 
       - name: Run scrape_test_merge.py
         run: |
-          python scrape_test_merge.py  # 执行你的文件
+          python scrape_test_merge.py  # 执行脚本，生成 best_sorted.m3u 文件
 
       - name: Update README.md with run time and file link
         run: |
           current_time=$(date +"%Y-%m-%d %H:%M:%S")
-          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/iptv.m3u"  # 假设生成的文件是 CSV  
-          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md  
-          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md  
+          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
+          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
+          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
 
       - name: Commit changes to README
         run: |
