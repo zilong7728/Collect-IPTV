@@ -1,47 +1,43 @@
-name: Scrape and Update README
+name: IPTV Daily Update
 
 on:
   schedule:
-    - cron: '0 8,20 * * *'  # 每日8点和20点运行一次
-  workflow_dispatch:  # 允许手动触发
+    - cron: '0 0,12 * * *'  # UTC时间0点和12点（对应北京时间8点和20点）
 
 jobs:
-  scrape:
+  scrape-and-update:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 获取权限
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install aiohttp
-          pip install asyncio
+    - name: Install dependencies
+      run: pip install aiohttp
 
-      - name: Run iptv.py
-        run: |
-          python .github/workflows/iptv.py  # 执行脚本，生成 best_sorted.m3u 文件
+    - name: Run scraping script
+      run: python .github/workflows/iptv.py
 
-      - name: Update README.md with run time and file link
-        run: |
-          current_time=$(date +"%Y-%m-%d %H:%M:%S")
-          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
-          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
-          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
+    - name: Capture execution time
+      id: time
+      run: |
+        TZ="Asia/Shanghai"
+        echo "exec_time=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_OUTPUT
 
-      - name: Commit changes to README
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "Update README with last run time and generated file link"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub Actions 提供的 token
+    - name: Update README
+      run: |
+        sed -i "s/最后运行时间：.*/最后运行时间：${{ steps.time.outputs.exec_time }}/g" README.md
+        sed -i "s|文件链接：.*|文件链接：https://github.com/${{ github.repository }}/raw/main/best_sorted.m3u|g" README.md
+
+    - name: Commit changes
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add README.md best_sorted.m3u
+        git commit -m "自动更新：${{ steps.time.outputs.exec_time }}"
+        git push
