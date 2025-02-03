@@ -29,9 +29,9 @@ jobs:
       - name: Update README.md with run time and file link
         run: |
           current_time=$(date +"%Y-%m-%d %H:%M:%S")
-          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/generated_file.csv"  # 假设生成的文件是 CSV
-          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
-          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
+          file_link="https://github.com/${{ github.repository }}/blob/${{ github.ref }}/iptv.m3u"  # 假设生成的文件是 CSV  
+          sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md  
+          sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md  
 
       - name: Commit changes to README
         run: |
