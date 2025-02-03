@@ -27,7 +27,12 @@ jobs:
     - name: Capture execution time
       id: time
       run: |
-        TZ="Asia/Shanghai" echo "exec_time=$(date +"%Y-%m-%d %H:%M:%S UTC+8")" >> $GITHUB_OUTPUT
+        # 确认时区设置
+        echo "Current timezone: $(date)"
+        # 获取上海时区时间
+        exec_time=$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")
+        echo "exec_time=$exec_time" >> $GITHUB_OUTPUT  # 将时间传递给 GitHub Actions
+    
 
 
     - name: Update README.md with run time and file link
