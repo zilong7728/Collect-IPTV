@@ -1,5 +1,5 @@
 # Collect-IPTV
-IPTV节目源收集，每日更新！！
+利用DeepSeek和ChatGPT生成的IPTV节目源收集程序，Github服务器测试可用性，m3u每日更新,代码优化中😊！
 ## Last Run Time
 <!-- Last Run Time --> 2025-02-03 21:14:50
 
