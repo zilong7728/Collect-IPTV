@@ -24,22 +24,14 @@ jobs:
     - name: Run scraping script
       run: python .github/workflows/iptv.py
 
-    - name: Capture execution time
-      id: time
-      run: |
-        # 确认时区设置
-        echo "Current timezone: $(date)"
-        # 获取上海时区时间
-        exec_time=$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")
-        echo "exec_time=$exec_time" >> $GITHUB_OUTPUT  # 将时间传递给 GitHub Actions
+    - name: GetTime
+      run: echo "GET_TIME=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_ENV
     
-
 
     - name: Update README.md with run time and file link
       run: |
-        current_time=$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S UTC+8")
         file_link="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
-        sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${current_time}|" README.md
+        sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${GET_TIME}|" README.md
         sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
        
 
@@ -51,5 +43,5 @@ jobs:
         git config --global user.email "actions@github.com"
         git remote set-url origin $REPO_URL
         git add README.md best_sorted.m3u
-        git commit -m "自动更新：${{ steps.time.outputs.exec_time }}"
+        git commit -am "自动更新：${GET_TIME}"
         git push origin main
