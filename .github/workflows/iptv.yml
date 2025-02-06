@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 0,12 * * *'  # UTC时间0点和12点（对应北京时间8点和20点）
   workflow_dispatch:  # 允许手动触发
+  
+env:
+  TZ: Asia/Shanghai
 
 jobs:
   scrape-and-update:
