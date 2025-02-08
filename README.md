@@ -5,3 +5,7 @@
 
 ## Generated File Link
 <!-- Generated File Link --> [View Generated File](https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/best_sorted.m3u)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=zilong7728/Collect-IPTV&type=Date)](https://star-history.com/#zilong7728/Collect-IPTV&Date)
