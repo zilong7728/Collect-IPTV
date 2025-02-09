@@ -2,8 +2,8 @@ name: IPTV Daily Update
 
 on:
   schedule:
-    - cron: '0 0,12 * * *'  # UTC时间0点和12点（对应北京时间8点和20点）
-  workflow_dispatch:  # 允许手动触发
+    - cron: '0 */4 * * *'  
+  workflow_dispatch: 
   
 env:
   TZ: Asia/Shanghai
