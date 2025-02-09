@@ -12,9 +12,14 @@ def get_dynamic_keywords():
     动态生成需要过滤的关键词（今天的日期、明天的日期以及固定关键词）
     """
     fixed_keywords = ["免费提供"]
-    today = datetime.now().strftime("%Y-%m-%d")
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-    return fixed_keywords + [today, tomorrow]
+    return fixed_keywords
+
+def contains_date(text):
+    """
+    检测字符串中是否包含日期格式（如 YYYY-MM-DD）
+    """
+    date_pattern = r"\d{4}-\d{2}-\d{2}"  # 正则表达式匹配 YYYY-MM-DD
+    return re.search(date_pattern, text) is not None
 
 
 # 配置
@@ -165,8 +170,8 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
     keywords = get_dynamic_keywords()
 
     for channel, url in valid_urls:
-        if any(keyword in channel or keyword in url for keyword in keywords):
-            continue  # 过滤掉包含关键词的频道
+        if contains_date(channel) or contains_date(url):
+            continue  # 过滤掉包含日期格式的频道
         # 正规化 CCTV 频道名
         normalized_channel = normalize_cctv_name(channel)
 
