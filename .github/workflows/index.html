@@ -13,8 +13,8 @@
             <div class="flex items-center space-x-4">
                 <span class="text-sm font-medium text-gray-600">当前时间：<span id="currentTime" class="text-blue-600"></span></span>
                 <span class="text-sm font-medium text-gray-600">数据版本：<span id="githubUpdateTime" class="text-green-600">加载中...</span></span>
+                <span class="text-sm font-medium text-gray-600">频道总数：<span id="channelCount" class="text-purple-600">-</span></span>
             </div>
-            <!-- 状态栏按钮组部分修改 -->
             <div class="flex items-center space-x-2">
                 <a 
                     href="https://github.com/zilong7728/Collect-IPTV" 
@@ -129,6 +129,7 @@
         function displayChannels(channels) {
             const tbody = document.getElementById('channelList');
             tbody.innerHTML = '';
+            document.getElementById('channelCount').textContent = channels.length;
 
             channels.forEach((channel, index) => {
                 const row = document.createElement('tr');
@@ -138,13 +139,14 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${channel.name}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-purple-600">${channel.category}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href="${channel.url}" target="_blank" class="text-blue-600 hover:text-blue-800">播放链接</a>
+                        <a href="${channel.url}" target="_blank" class="text-blue-600 hover:text-blue-800">复制链接</a>
                     </td>
                 `;
 
                 tbody.appendChild(row);
             });
         }
+        document.getElementById('channelCount').textContent = '加载中...';
 
         function updateClock() {
             const now = new Date();
