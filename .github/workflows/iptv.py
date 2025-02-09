@@ -151,10 +151,8 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
     other_channels = []
 
     for channel, url in valid_urls:
-        # 正规化 CCTV 频道名
         normalized_channel = normalize_cctv_name(channel)
 
-        # 根据频道名判断属于哪个分组
         if normalized_channel in cctv_channels:
             cctv_channels_list.append({
                 "channel": channel,
@@ -176,7 +174,7 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
                         "channel": channel,
                         "url": url,
                         "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
-                        "group_title": f"{province}频道"
+                        "group_title": f"{province}"
                     })
         else:
             other_channels.append({
