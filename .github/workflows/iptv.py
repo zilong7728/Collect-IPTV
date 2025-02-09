@@ -143,6 +143,7 @@ async def read_and_test_file(file_path, is_m3u=False):
 
 
 # 生成排序后的 M3U 文件
+
 def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
     """生成排序后的 M3U 文件"""
     cctv_channels_list = []
@@ -151,8 +152,10 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
     other_channels = []
 
     for channel, url in valid_urls:
+        # 正规化 CCTV 频道名
         normalized_channel = normalize_cctv_name(channel)
 
+        # 根据频道名判断属于哪个分组
         if normalized_channel in cctv_channels:
             cctv_channels_list.append({
                 "channel": channel,
@@ -167,22 +170,29 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
                 "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
                 "group_title": "卫视频道"
             })
-        elif any(province in channel for province in province_channels):  # 本地省份频道
-            for province, channels in province_channels.items():
-                if channel in channels:
-                    province_channels_list[province].append({
-                        "channel": channel,
-                        "url": url,
-                        "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
-                        "group_title": f"{province}"
-                    })
         else:
-            other_channels.append({
-                "channel": channel,
-                "url": url,
-                "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
-                "group_title": "其他频道"
-            })
+            # 检查是否是省份频道
+            found_province = False
+            for province, channels in province_channels.items():
+                for province_channel in channels:
+                    if province_channel in channel:  # 匹配省份频道名称
+                        province_channels_list[province].append({
+                            "channel": channel,
+                            "url": url,
+                            "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
+                            "group_title": f"{province}频道"
+                        })
+                        found_province = True
+                        break
+                if found_province:
+                    break
+            if not found_province:
+                other_channels.append({
+                    "channel": channel,
+                    "url": url,
+                    "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
+                    "group_title": "其他频道"
+                })
 
     # 排序：省份频道、卫视频道、其他频道
     for province in province_channels_list:
@@ -204,6 +214,7 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
             f.write(
                 f"#EXTINF:-1 tvg-name=\"{channel_info['channel']}\" tvg-logo=\"{channel_info['logo']}\" group-title=\"{channel_info['group_title']}\",{channel_info['channel']}\n")
             f.write(f"{channel_info['url']}\n")
+
 
 
 # 加载省份频道列表
