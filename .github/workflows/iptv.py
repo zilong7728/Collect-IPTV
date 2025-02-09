@@ -180,7 +180,7 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
                             "channel": channel,
                             "url": url,
                             "logo": f"https://live.fanmingming.cn/tv/{channel}.png",
-                            "group_title": f"{province}频道"
+                            "group_title": f"{province}"
                         })
                         found_province = True
                         break
