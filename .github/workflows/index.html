@@ -6,159 +6,220 @@
     <title>IPTV直播源监控</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-6xl mx-auto space-y-6">
-        <!-- 状态栏 -->
-        <div class="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <span class="text-sm font-medium text-gray-600">当前时间：<span id="currentTime" class="text-blue-600"></span></span>
-                <span class="text-sm font-medium text-gray-600">数据版本：<span id="githubUpdateTime" class="text-green-600">加载中...</span></span>
-                <span class="text-sm font-medium text-gray-600">频道总数：<span id="channelCount" class="text-purple-600">-</span></span>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 控制栏 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 第一行：筛选控件 -->
+                <div class="flex flex-col md:flex-row gap-4 md:col-span-2">
+                    <select id="categoryFilter" class="w-full md:w-48 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">所有分类</option>
+                    </select>
+                    
+                    <div class="flex flex-1 gap-2">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="搜索频道..." 
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <button 
+                            onclick="loadData()"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap"
+                            title="重新加载数据"
+                        >
+                            ↻ 刷新
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 第二行：状态信息 -->
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:col-span-2">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium text-gray-600">
+                            当前时间：<span id="currentTime" class="text-blue-600"></span>
+                        </span>
+                        <span class="text-sm font-medium text-gray-600">
+                            数据版本：<span id="githubUpdateTime"class="text-red-600">加载中...</span>
+                        </span>
+                        <span class="text-sm font-medium text-gray-600">
+                            频道总数：<span id="channelCount" class="text-purple-600">-</span>
+                        </span>
+                    </div>
+                    <a 
+                        href="https://github.com/zilong7728/Collect-IPTV" 
+                        target="_blank"
+                        class="text-sm text-gray-600 hover:text-blue-500 transition-colors"
+                    >
+                        GitHub项目地址 ↗
+                    </a>
+                </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <a 
-                    href="https://github.com/zilong7728/Collect-IPTV" 
-                    target="_blank"
-                    class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm flex items-center"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                    </svg>
-                    项目地址
-                </a>
-                <button 
-                    id="refreshBtn"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                    立即刷新
-                </button>
         </div>
 
-        </div>
-
-        <!-- 主内容区 -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-6">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">频道名称</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">分类</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">播放地址</th>
-                        </tr>
-                    </thead>
-                    <tbody id="channelList" class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">正在加载数据...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <!-- 频道表格 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">频道名称</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">分类</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="channelList" class="divide-y divide-gray-200"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        const README_RAW_URL = 'https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/README.md';
+        // 数据源配置
+        const README_URL = 'https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/README.md';
+        let M3U_URL = '';
 
-        // 初始化页面
-        document.addEventListener('DOMContentLoaded', () => {
-            updateClock();
-            setInterval(updateClock, 1000);
-            loadData();
-        });
+        // DOM元素引用
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        let allChannels = [];
 
-        // 刷新按钮功能
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            document.getElementById('channelList').innerHTML = `
-                <tr>
-                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">正在重新加载数据...</td>
-                </tr>
-            `;
-            loadData();
-        });
-
-        async function loadData() {
-            try {
-                // 强制刷新读取最新README
-                const readmeResponse = await fetch(`${README_RAW_URL}?t=${Date.now()}`);
-                const readmeContent = await readmeResponse.text();
-                
-                // 提取关键信息
-                const lastRunTime = readmeContent.match(/<!-- Last Run Time -->\s*([\d-]+\s[\d:]+)/)[1];
-                const m3uLink = readmeContent.match(/<!-- Generated File Link -->\s*\[.*?\]\((.*?)\)/)[1];
-                
-                // 更新状态
-                document.getElementById('githubUpdateTime').textContent = lastRunTime;
-                
-                // 强制刷新读取最新M3U
-                const m3uResponse = await fetch(`${m3uLink}?t=${Date.now()}`);
-                const m3uContent = await m3uResponse.text();
-                displayChannels(parseM3U(m3uContent));
-            } catch (error) {
-                console.error('Error:', error);
-                alert('数据加载失败: ' + error.message);
-            }
+        // 时间显示更新
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = 
+                `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
         }
+        setInterval(updateTime, 1000);
+        updateTime();
 
-        function parseM3U(content) {
-            const channels = [];
-            const lines = content.split('\n');
-            let currentChannel = {};
-
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('#EXTINF')) {
-                    const info = line.match(/tvg-name="([^"]+)".*group-title="([^"]+)"/);
-                    currentChannel = {
-                        name: info ? info[1] : '未知频道',
-                        category: info ? info[2] : '未分类'
-                    };
-                } else if (line.startsWith('http')) {
-                    currentChannel.url = line;
-                    channels.push({...currentChannel});
-                }
+        // 复制功能
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('链接已复制到剪贴板');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('自动复制失败，请手动选择链接');
             });
-
-            return channels;
         }
 
+        // 渲染频道列表
         function displayChannels(channels) {
             const tbody = document.getElementById('channelList');
             tbody.innerHTML = '';
-            document.getElementById('channelCount').textContent = channels.length;
 
             channels.forEach((channel, index) => {
                 const row = document.createElement('tr');
-                
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${channel.name}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-purple-600">${channel.category}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href="${channel.url}" target="_blank" class="text-blue-600 hover:text-blue-800">复制链接</a>
+                        <button 
+                            onclick="copyToClipboard('${channel.url}')"
+                            class="text-blue-600 hover:text-blue-800 cursor-pointer bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition-colors"
+                        >
+                            复制链接
+                        </button>
                     </td>
                 `;
-
                 tbody.appendChild(row);
             });
-        }
-        document.getElementById('channelCount').textContent = '加载中...';
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            document.getElementById('channelCount').textContent = channels.length;
         }
+
+        // 解析M3U内容
+        function parseM3U(content) {
+            const channels = [];
+            let currentChannel = {};
+            
+            content.split('\n').forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:-1')) {
+                    const infoMatch = line.match(/tvg-name="([^"]+)".*group-title="([^"]+)"/);
+                    const nameMatch = line.match(/,(.*)$/);
+                    currentChannel = {
+                        name: nameMatch ? nameMatch[1].trim() : '未知频道',
+                        category: infoMatch ? infoMatch[2].trim() : '未分类',
+                        url: ''
+                    };
+                } else if (line.startsWith('http')) {
+                    currentChannel.url = line.trim();
+                    channels.push(currentChannel);
+                }
+            });
+            return channels;
+        }
+
+        // 加载数据
+        async function loadData() {
+            try {
+                // 清空现有数据
+                allChannels = [];
+                displayChannels([]);
+                document.getElementById('githubUpdateTime').textContent = '加载中...';
+
+                // 第一步：获取README内容
+                const readmeResponse = await fetch(README_URL);
+                const readmeText = await readmeResponse.text();
+
+                // 提取更新时间
+                const timeMatch = readmeText.match(/<!-- Last Run Time -->\s*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+                if (timeMatch) {
+                    document.getElementById('githubUpdateTime').textContent = timeMatch[1];
+                }
+
+                // 提取M3U链接
+                const m3uMatch = readmeText.match(/<!-- Generated File Link -->.*\((https:\/\/[^)]+)\)/);
+                if (m3uMatch) {
+                    M3U_URL = m3uMatch[1];
+                } else {
+                    throw new Error('未找到M3U文件链接');
+                }
+
+                // 第二步：获取M3U数据
+                const m3uResponse = await fetch(M3U_URL);
+                const m3uContent = await m3uResponse.text();
+                
+                // 解析M3U
+                allChannels = parseM3U(m3uContent);
+                
+                // 生成分类选项
+                const categories = [...new Set(allChannels.map(c => c.category))];
+                categoryFilter.innerHTML = `
+                    <option value="">所有分类</option>
+                    ${categories.map(c => `<option>${c}</option>`).join('')}
+                `;
+
+                displayChannels(allChannels);
+            } catch (error) {
+                console.error('数据加载失败:', error);
+                alert('数据加载失败: ' + error.message);
+            }
+        }
+
+        // 筛选功能
+        function filterChannels() {
+            const searchText = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+
+            const filtered = allChannels.filter(channel => {
+                const nameMatch = channel.name.toLowerCase().includes(searchText);
+                const categoryMatch = selectedCategory ? 
+                    channel.category === selectedCategory : true;
+                return nameMatch && categoryMatch;
+            });
+
+            displayChannels(filtered);
+        }
+
+        // 事件监听
+        searchInput.addEventListener('input', filterChannels);
+        categoryFilter.addEventListener('change', filterChannels);
+
+        // 初始化
+        loadData();
     </script>
 </body>
 </html>
