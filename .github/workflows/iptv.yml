@@ -1,45 +1,31 @@
 name: IPTV Daily Update
-
 on:
   schedule:
     - cron: '0 */4 * * *'  
   workflow_dispatch: 
-  
 env:
   TZ: Asia/Shanghai
-
 jobs:
   scrape-and-update:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-
     - name: Install dependencies
       run: pip install aiohttp
-
     - name: Run scraping script
       run: python .github/workflows/iptv.py
-
     - name: GetTime
       run: echo "GET_TIME=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_ENV
-    
     - name: Update README.md with run time and file link
       run: |
-        # 定义两个文件的链接
-        m3u_link="https://raw.githubusercontent.com/${{ github.repository }}/main/best_sorted.m3u"
-        m3u8_link="https://raw.githubusercontent.com/${{ github.repository }}/main/best_sorted.m3u8"
-        
-        # 替换 README 中的时间和链接（展示两个格式的下载地址）
-        sed -i "s|.*|${GET_TIME}|" README.md
-        sed -i "s|.*|[M3U 格式](${m3u_link}) \| [M3U8 格式](${m3u8_link})|" README.md
-
+        file_link="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
+        sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${GET_TIME}|" README.md
+        sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
     - name: Commit changes
       env:
         REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
@@ -47,8 +33,6 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git remote set-url origin $REPO_URL
-        
-        # 这里把 best_sorted.m3u8 也加到暂存区
-        git add README.md best_sorted.m3u best_sorted.m3u8
+        git add README.md best_sorted.m3u
         git commit -am "自动更新：${GET_TIME}"
         git push origin main
