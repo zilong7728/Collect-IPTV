@@ -30,13 +30,15 @@ jobs:
     - name: GetTime
       run: echo "GET_TIME=$(date +'%Y-%m-%d %H:%M:%S CST')" >> $GITHUB_ENV
     
-
     - name: Update README.md with run time and file link
       run: |
-        file_link="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/best_sorted.m3u"  # 生成的文件是 best_sorted.m3u
-        sed -i "s|<!-- Last Run Time -->.*|<!-- Last Run Time --> ${GET_TIME}|" README.md
-        sed -i "s|<!-- Generated File Link -->.*|<!-- Generated File Link --> [View Generated File](${file_link})|" README.md
-       
+        # 定义两个文件的链接
+        m3u_link="https://raw.githubusercontent.com/${{ github.repository }}/main/best_sorted.m3u"
+        m3u8_link="https://raw.githubusercontent.com/${{ github.repository }}/main/best_sorted.m3u8"
+        
+        # 替换 README 中的时间和链接（展示两个格式的下载地址）
+        sed -i "s|.*|${GET_TIME}|" README.md
+        sed -i "s|.*|[M3U 格式](${m3u_link}) \| [M3U8 格式](${m3u8_link})|" README.md
 
     - name: Commit changes
       env:
@@ -45,6 +47,8 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git remote set-url origin $REPO_URL
-        git add README.md best_sorted.m3u
+        
+        # 这里把 best_sorted.m3u8 也加到暂存区
+        git add README.md best_sorted.m3u best_sorted.m3u8
         git commit -am "自动更新：${GET_TIME}"
         git push origin main
