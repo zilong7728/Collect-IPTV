@@ -159,10 +159,9 @@ async def read_and_test_file(file_path, is_m3u=False):
         return []
 
 
-# 生成排序后的 M3U 文件
-
+# 生成排序后的 M3U 和 M3U8 文件
 def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
-    """生成排序后的 M3U 文件"""
+    """生成排序后的 M3U 和 M3U8 文件"""
     cctv_channels_list = []
     province_channels_list = defaultdict(list)
     satellite_channels = []
@@ -172,6 +171,7 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
     for channel, url in valid_urls:
         if contains_date(channel) or contains_date(url):
             continue  # 过滤掉包含日期格式的频道
+        
         # 正规化 CCTV 频道名
         normalized_channel = normalize_cctv_name(channel)
 
@@ -227,13 +227,17 @@ def generate_sorted_m3u(valid_urls, cctv_channels, province_channels, filename):
                     province_channels_list[province]] + \
                    other_channels
 
-    # 写入 M3U 文件
-    with open(filename, 'w', encoding='utf-8') as f:
-        f.write("#EXTM3U\n")
-        for channel_info in all_channels:
-            f.write(
-                f"#EXTINF:-1 tvg-name=\"{channel_info['channel']}\" tvg-logo=\"{channel_info['logo']}\" group-title=\"{channel_info['group_title']}\",{channel_info['channel']}\n")
-            f.write(f"{channel_info['url']}\n")
+    # 生成 m3u8 的文件名 (将后缀 .m3u 替换为 .m3u8)
+    m3u8_filename = filename.replace('.m3u', '.m3u8')
+    
+    # 写入 M3U 和 M3U8 文件
+    for fname in [filename, m3u8_filename]:
+        with open(fname, 'w', encoding='utf-8') as f:
+            f.write("#EXTM3U\n")
+            for channel_info in all_channels:
+                f.write(
+                    f"#EXTINF:-1 tvg-name=\"{channel_info['channel']}\" tvg-logo=\"{channel_info['logo']}\" group-title=\"{channel_info['group_title']}\",{channel_info['channel']}\n")
+                f.write(f"{channel_info['url']}\n")
 
 
 
