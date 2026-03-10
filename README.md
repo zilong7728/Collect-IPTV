@@ -2,13 +2,8 @@
 利用DeepSeek和ChatGPT生成的IPTV节目源收集程序，Github服务器测试可用性和延迟性，m3u每4小时自动更新,代码优化中😊！
 ## 📺️TV station list
 https://zilong7728.github.io/Collect-IPTV/
-## ⏱️Last Run Time
-<!-- Last Run Time --> 2026-03-10 18:45:42 CST
-## 🔗Generated File Link
-<!-- Generated File Link --> [View Generated File](https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/best_sorted.m3u)
-<!-- Generated File Link --> [View Generated File](https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/best_sorted.m3u8)
-## ⏱️ 最新更新信息
-| 类型 | 内容 |
+## ⏱️ Latest Updates
+| Type | Content |
 |------|------|
 | 最后更新时间 | <!-- Last Run Time --> 2026-03-10 18:45:42 CST |
 | M3U 节目源文件 | <!-- Generated File Link M3U --> [📥 下载 M3U 文件](https://raw.githubusercontent.com/zilong7728/Collect-IPTV/refs/heads/main/best_sorted.m3u) |
