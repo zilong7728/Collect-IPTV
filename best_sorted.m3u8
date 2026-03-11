@@ -48,7 +48,7 @@ http://120.76.248.139/live/bfgd/4200000110.m3u8
 #EXTINF:-1 tvg-name=" 农林卫视" tvg-logo="https://live.fanmingming.cn/tv/ 农林卫视.png" group-title="卫视频道", 农林卫视
 http://120.76.248.139/live/bfgd/4200000122.m3u8
 #EXTINF:-1 tvg-name=" 北京卫视" tvg-logo="https://live.fanmingming.cn/tv/ 北京卫视.png" group-title="卫视频道", 北京卫视
-http://58.57.40.22:9901/tsfile/live/1032_1.m3u8
+http://23.237.228.134/live3/beijing.m3u8
 #EXTINF:-1 tvg-name=" 北京卫视4K超" tvg-logo="https://live.fanmingming.cn/tv/ 北京卫视4K超.png" group-title="卫视频道", 北京卫视4K超
 http://183.215.134.239:19901/tsfile/live/0122_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name=" 厦门卫视" tvg-logo="https://live.fanmingming.cn/tv/ 厦门卫视.png" group-title="卫视频道", 厦门卫视
@@ -65,6 +65,8 @@ http://222.128.55.152:9080/live/dwq.m3u8
 http://58.57.40.22:9901/tsfile/live/1034_1.m3u8
 #EXTINF:-1 tvg-name=" 宁夏卫视" tvg-logo="https://live.fanmingming.cn/tv/ 宁夏卫视.png" group-title="卫视频道", 宁夏卫视
 http://58.57.40.22:9901/tsfile/live/1054_1.m3u8
+#EXTINF:-1 tvg-name=" 安多卫视" tvg-logo="https://live.fanmingming.cn/tv/ 安多卫视.png" group-title="卫视频道", 安多卫视
+https://liveout.xntv.tv/a65jur/96iln2.m3u8
 #EXTINF:-1 tvg-name=" 安徽卫视" tvg-logo="https://live.fanmingming.cn/tv/ 安徽卫视.png" group-title="卫视频道", 安徽卫视
 http://58.57.40.22:9901/tsfile/live/1033_1.m3u8
 #EXTINF:-1 tvg-name=" 山东卫视" tvg-logo="https://live.fanmingming.cn/tv/ 山东卫视.png" group-title="卫视频道", 山东卫视
@@ -179,12 +181,12 @@ http://cctvtxyh5c.liveplay.myqcloud.com/cstv/xianggangweishi_2/index.m3u8
 http://38.75.136.137:98/gslb/dsdqpub/hljwshd.m3u8?auth=testpub
 #EXTINF:-1 tvg-name=" 上海第一财经" tvg-logo="https://live.fanmingming.cn/tv/ 上海第一财经.png" group-title="上海频道", 上海第一财经
 https://satellitepull.cnr.cn/live/wx32dycjgb/playlist.m3u8
+#EXTINF:-1 tvg-name=" 上虞新闻综合" tvg-logo="https://live.fanmingming.cn/tv/ 上虞新闻综合.png" group-title="上海频道", 上虞新闻综合
+http://l.cztvcloud.com/channels/lantian/SXshangyu1/720p.m3u8?zzhed
 #EXTINF:-1 tvg-name=" 金鹰卡通" tvg-logo="https://live.fanmingming.cn/tv/ 金鹰卡通.png" group-title="卫视频道", 金鹰卡通
 http://58.57.40.22:9901/tsfile/live/1059_1.m3u8
 #EXTINF:-1 tvg-name=" 东丰综合" tvg-logo="https://live.fanmingming.cn/tv/ 东丰综合.png" group-title="吉林频道", 东丰综合
 http://stream3.jlntv.cn:80/aac_dfgb/playlist.m3u8
-#EXTINF:-1 tvg-name=" 九台综合" tvg-logo="https://live.fanmingming.cn/tv/ 九台综合.png" group-title="吉林频道", 九台综合
-http://stream10.jlntv.cn/jiutaitv/sd/live.m3u8
 #EXTINF:-1 tvg-name=" 乐至综合" tvg-logo="https://live.fanmingming.cn/tv/ 乐至综合.png" group-title="四川频道", 乐至综合
 http://175.155.106.72:89/live1/live1.m3u8
 #EXTINF:-1 tvg-name=" 四川科教" tvg-logo="https://live.fanmingming.cn/tv/ 四川科教.png" group-title="四川频道", 四川科教
@@ -239,8 +241,8 @@ http://110.153.180.106:55555/out_2/index.m3u8?zxinjd
 http://110.153.180.106:55555/out_2/index.m3u8
 #EXTINF:-1 tvg-name=" 南京少儿" tvg-logo="https://live.fanmingming.cn/tv/ 南京少儿.png" group-title="江苏频道", 南京少儿
 http://nklive.nbs.cn/hls/e0981f3f-1a20-4a59-b8d1-17feb83a4610/index.m3u8
-#EXTINF:-1 tvg-name=" 上虞文化影院" tvg-logo="https://live.fanmingming.cn/tv/ 上虞文化影院.png" group-title="浙江频道", 上虞文化影院
-http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8
+#EXTINF:-1 tvg-name=" 上虞新商都" tvg-logo="https://live.fanmingming.cn/tv/ 上虞新商都.png" group-title="浙江频道", 上虞新商都
+http://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8
 #EXTINF:-1 tvg-name=" 东阳影视生活" tvg-logo="https://live.fanmingming.cn/tv/ 东阳影视生活.png" group-title="浙江频道", 东阳影视生活
 http://l.cztvcloud.com/channels/lantian/SXdongyang1/720p.m3u8
 #EXTINF:-1 tvg-name=" 中国蓝新闻" tvg-logo="https://live.fanmingming.cn/tv/ 中国蓝新闻.png" group-title="浙江频道", 中国蓝新闻
@@ -369,6 +371,8 @@ http://live.qthnews.org.cn:1935/live/live2/800k/tzwj_video.m3u8
 http://120.76.248.139/live/bfgd/4200000158.m3u8
 #EXTINF:-1 tvg-name=" 中国交通" tvg-logo="https://live.fanmingming.cn/tv/ 中国交通.png" group-title="其他频道", 中国交通
 http://drive.mxmy.net:8888/udp/239.3.1.188:8001
+#EXTINF:-1 tvg-name=" 临颍综合" tvg-logo="https://live.fanmingming.cn/tv/ 临颍综合.png" group-title="其他频道", 临颍综合
+http://live.dxhmt.cn:9081/tv/11122-1.m3u8
 #EXTINF:-1 tvg-name=" 优优宝贝" tvg-logo="https://live.fanmingming.cn/tv/ 优优宝贝.png" group-title="其他频道", 优优宝贝
 http://120.76.248.139/live/bfgd/4200000153.m3u8
 #EXTINF:-1 tvg-name=" 倩女幽魂人间道" tvg-logo="https://live.fanmingming.cn/tv/ 倩女幽魂人间道.png" group-title="其他频道", 倩女幽魂人间道
@@ -391,8 +395,6 @@ http://120.76.248.139/live/bfgd/4200000229.m3u8
 http://pull-vivek.speedws.com/live/aaatyjd.flv
 #EXTINF:-1 tvg-name=" 奎屯汉语" tvg-logo="https://live.fanmingming.cn/tv/ 奎屯汉语.png" group-title="其他频道", 奎屯汉语
 http://218.84.12.186:8001/hls/main/playlist.m3u8?zxinjd
-#EXTINF:-1 tvg-name=" 广东体育" tvg-logo="https://live.fanmingming.cn/tv/ 广东体育.png" group-title="其他频道", 广东体育
-http://cdn2.163189.xyz/live/gdty/stream.m3u8
 #EXTINF:-1 tvg-name=" 快乐垂钓" tvg-logo="https://live.fanmingming.cn/tv/ 快乐垂钓.png" group-title="其他频道", 快乐垂钓
 http://drive.mxmy.net:8888/udp/239.3.1.164:8001
 #EXTINF:-1 tvg-name=" 支持作者" tvg-logo="https://live.fanmingming.cn/tv/ 支持作者.png" group-title="其他频道", 支持作者
@@ -401,8 +403,6 @@ https://vd3.bdstatic.com/mda-rkaittm5s06vzzyq/sc/cae_h264/1762869883709304452/md
 http://120.76.248.139/live/bfgd/4200000249.m3u8
 #EXTINF:-1 tvg-name=" 无线星河" tvg-logo="https://live.fanmingming.cn/tv/ 无线星河.png" group-title="其他频道", 无线星河
 https://cdn6.101.qzz.io/163189/tvbxh
-#EXTINF:-1 tvg-name=" 武汉少儿频道" tvg-logo="https://live.fanmingming.cn/tv/ 武汉少儿频道.png" group-title="其他频道", 武汉少儿频道
-http://hzzzz530.com:4022/udp/239.69.1.6:9676
 #EXTINF:-1 tvg-name=" 江津新闻" tvg-logo="https://live.fanmingming.cn/tv/ 江津新闻.png" group-title="其他频道", 江津新闻
 http://222.179.155.21:1935/ch1.m3u8?zzhongqd
 #EXTINF:-1 tvg-name=" 熊猫直播" tvg-logo="https://live.fanmingming.cn/tv/ 熊猫直播.png" group-title="其他频道", 熊猫直播
@@ -469,6 +469,8 @@ https://epg.pw/stream/ca9c1cd4b97fb824cedd7fedfd0c7a950afdd7f00751cfbb7c2d89831d
 https://epg.pw/stream/25677ac2e8c1f7c3dd6359c43eb5f0f54efb3f5c11f9dda18d01b3e0308ed017.m3u8
 #EXTINF:-1 tvg-name="女性时尚" tvg-logo="https://live.fanmingming.cn/tv/女性时尚.png" group-title="其他频道",女性时尚
 http://38.75.136.137:98/gslb/dsdqpub/nxss.m3u8?auth=testpub
+#EXTINF:-1 tvg-name="广东体育" tvg-logo="https://live.fanmingming.cn/tv/广东体育.png" group-title="其他频道",广东体育
+https://epg.pw/stream/7b470f9fc5c305db0c8622117b7b25ca00eb35ba3e93e865cf0ff9df5c736681.m3u8
 #EXTINF:-1 tvg-name="怀旧剧场" tvg-logo="https://live.fanmingming.cn/tv/怀旧剧场.png" group-title="其他频道",怀旧剧场
 http://38.75.136.137:98/gslb/dsdqpub/hjjc.m3u8?auth=testpub
 #EXTINF:-1 tvg-name="文化精品" tvg-logo="https://live.fanmingming.cn/tv/文化精品.png" group-title="其他频道",文化精品
