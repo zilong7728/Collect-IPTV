@@ -942,7 +942,7 @@ if __name__ == "__main__":
     file_urls = [
         "https://tzdr.com/iptv.txt",
         "https://live.kilvn.com/iptv.m3u",
-        "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.m3u",
+        "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.txt",
         "https://gh-proxy.com/raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u",
         "http://175.178.251.183:6689/live.m3u",
         "https://raw.githubusercontent.com/suxuang/myIPTV/refs/heads/main/ipv4.m3u",
