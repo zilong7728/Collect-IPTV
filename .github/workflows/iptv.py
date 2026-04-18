@@ -949,7 +949,6 @@ if __name__ == "__main__":
         "https://m3u.ibert.me/ycl_iptv.m3u",
         "https://tv.iill.top/m3u/Gather",
         "https://live.zbds.org/tv/iptv4.m3u",
-        "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u",
         "https://raw.githubusercontent.com/YueChan/Live/refs/heads/main/IPTV.m3u",
         "https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u",
         "https://raw.githubusercontent.com/BurningC4/Chinese-IPTV/master/TV-IPV4.m3u",
