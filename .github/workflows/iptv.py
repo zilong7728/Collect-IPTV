@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 import time
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 import re
 from typing import Dict, Iterable, List, Optional, Set, Tuple, Any
 
@@ -237,6 +237,24 @@ SCENIC_EXCLUDE_HINTS_NORMALIZED = {
 IGNORED_GEO_NAMES_NORMALIZED = {
     normalize_text_for_match(name) for name in IGNORED_GEO_NAMES
 }
+
+BLOCKED_M3U_KEYWORDS = (
+    "更新时间", "更新時間", "维护时间", "維護時間", "维护内容", "維護内容", "维护內容",
+    "公告说明", "公告說明", "公告", "说明", "說明", "支持作者", "支持打赏", "支持打賞",
+    "免费订阅", "免費訂閲", "免費訂閱", "温馨提示", "溫馨提示", "建議使用", "建议使用",
+    "请勿贩卖", "請勿販賣", "请勿频繁切换", "請勿頻繁切換", "个人觀看", "個人觀看"
+)
+
+BLOCKED_M3U_KEYWORDS_NORMALIZED = tuple(
+    normalize_text_for_match(keyword) for keyword in BLOCKED_M3U_KEYWORDS
+)
+
+CHANNEL_NAME_MARKERS = (
+    "卫视", "衛視", "频道", "頻道", "台", "TV", "CCTV", "CGTN", "CHC",
+    "影视", "影視", "电影", "電影", "新闻", "新聞", "综合", "綜合", "体育", "體育",
+    "少儿", "少兒", "科教", "经济", "經濟", "生活", "都市", "公共", "纪实", "紀實",
+    "卡通", "动画", "動漫", "戏曲", "戲曲", "文旅", "电视剧", "電視劇"
+)
 
 
 # 读取 CCTV 频道列表
@@ -560,6 +578,108 @@ def channel_identity_key(channel: str) -> str:
     return normalize_text_for_match(normalize_cctv_name(channel))
 
 
+def looks_like_notice_entry(channel: str, source_group_title: Optional[str] = None) -> bool:
+    """过滤订阅提示、维护公告、更新时间等非频道条目。"""
+    haystacks = [channel]
+    if source_group_title:
+        haystacks.append(source_group_title)
+
+    for text in haystacks:
+        raw_text = str(text or "").strip()
+        if not raw_text:
+            continue
+        lowered = raw_text.casefold()
+        if any(keyword.casefold() in lowered for keyword in BLOCKED_M3U_KEYWORDS):
+            return True
+
+        normalized = normalize_text_for_match(raw_text)
+        if normalized and any(keyword in normalized for keyword in BLOCKED_M3U_KEYWORDS_NORMALIZED):
+            return True
+    return False
+
+
+def _cleanup_extinf_payload(text: str) -> str:
+    cleaned = str(text or "")
+    cleaned = re.sub(r"https?://[^\s\"',]+", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(
+        r"""(?ix)
+        \b(?:tvg-id|tvg-name|tvg-logo|group-title|catchup|catchup-source|x-tvg-url)\s*=\s*
+        (?:"[^"]*"|'[^']*'|[^\s,]+)
+        """,
+        " ",
+        cleaned,
+    )
+    cleaned = cleaned.replace("#EXTINF:-1", " ")
+    cleaned = cleaned.replace(",", " ")
+    cleaned = cleaned.replace('"', " ").replace("'", " ")
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned.strip()
+
+
+def _extract_channel_candidates(text: str) -> List[str]:
+    candidates: List[str] = []
+    raw_source = str(text or "")
+    source = _cleanup_extinf_payload(raw_source)
+    raw_without_urls = re.sub(r"https?://[^\s\"',]+", " ", raw_source, flags=re.IGNORECASE)
+    if not raw_source and not source:
+        return candidates
+
+    patterns = [
+        r"(?i)CCTV[\s-]?\d+\+?",
+        r"(?i)(?:CGTN|CHC)[A-Z0-9+\-]*",
+        r"[\u4e00-\u9fffA-Za-z0-9+]{1,24}(?:卫视|衛視|频道|頻道|影视|影視頻道|电影|電影|新闻|新聞|综合|綜合|体育|體育|少儿|少兒|科教|经济|經濟|生活|都市|公共|纪实|紀實|卡通|动画|動漫|戏曲|戲曲|文旅|电视台|電視台|电视|電視|台|TV)",
+    ]
+
+    for candidate_source in (raw_without_urls, source):
+        if not candidate_source:
+            continue
+
+        for pattern in patterns:
+            for match in re.findall(pattern, candidate_source):
+                value = re.sub(r"\s+", "", match).strip("\"' ,")
+                if value and len(value) <= 24:
+                    candidates.append(value)
+
+    token_source = _cleanup_extinf_payload(raw_without_urls)
+    for token in re.split(r"[\s|/]+", token_source):
+        token = token.strip("\"' ,")
+        if 2 <= len(token) <= 16 and any(marker.lower() in token.lower() for marker in CHANNEL_NAME_MARKERS):
+            candidates.append(token)
+
+    return candidates
+
+
+def sanitize_channel_name(channel: str, extinf_line: Optional[str] = None) -> str:
+    """清洗上游频道名，修复嵌套属性导致的脏名称。"""
+    raw_channel = str(channel or "").strip()
+    if not raw_channel:
+        return "Unknown"
+
+    needs_repair = any(marker in raw_channel for marker in ("tvg-id=", "tvg-name=", "tvg-logo=", "group-title="))
+    candidates: List[str] = []
+
+    if needs_repair:
+        candidates.extend(_extract_channel_candidates(raw_channel))
+        if extinf_line:
+            candidates.extend(_extract_channel_candidates(extinf_line))
+
+    if candidates:
+        scored = Counter(candidates)
+        best_candidate = sorted(
+            scored.items(),
+            key=lambda item: (
+                -item[1],
+                0 if any(marker.lower() in item[0].lower() for marker in CHANNEL_NAME_MARKERS) else 1,
+                len(item[0]),
+            )
+        )[0][0]
+        return best_candidate
+
+    cleaned = raw_channel.strip("\"' ,")
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned or "Unknown"
+
+
 def parse_group_title_from_extinf(extinf_line: str) -> Optional[str]:
     patterns = [
         r'group-title\s*=\s*"([^"]+)"',
@@ -609,9 +729,11 @@ def deduplicate_candidate_entries(entries: Iterable[Dict[str, Any]]) -> List[Dic
     seen: Set[Tuple[str, str]] = set()
 
     for entry in entries:
-        channel = str(entry.get("channel", "")).strip()
+        channel = sanitize_channel_name(str(entry.get("channel", "")).strip())
         url = str(entry.get("url", "")).strip()
         if not channel or not url.startswith(("http://", "https://")):
+            continue
+        if looks_like_notice_entry(channel, entry.get("source_group_title")):
             continue
 
         key = (channel_identity_key(channel), url)
@@ -652,7 +774,7 @@ def select_best_streams(valid_entries: Iterable[Dict[str, Any]]) -> List[Dict[st
     best_by_channel: Dict[str, Dict[str, Any]] = {}
 
     for entry in valid_entries:
-        channel = str(entry.get("channel", "")).strip()
+        channel = sanitize_channel_name(str(entry.get("channel", "")).strip())
         url = str(entry.get("url", "")).strip()
         if not channel or not url:
             continue
@@ -677,8 +799,11 @@ def extract_urls_from_txt(content):
         line = line.strip()
         if line and ',' in line:  # 格式应该是: <频道名>,<URL>
             channel, url = line.split(',', 1)
+            channel = sanitize_channel_name(channel)
+            if looks_like_notice_entry(channel):
+                continue
             urls.append({
-                "channel": channel.strip(),
+                "channel": channel,
                 "url": url.strip(),
                 "source_group_title": None,
             })
@@ -691,16 +816,21 @@ def extract_urls_from_m3u(content):
     urls: List[Dict[str, Any]] = []
     lines = content.splitlines()
     channel = "Unknown"
+    extinf_line = ""
     source_group_title = None
 
     for line in lines:
         line = line.strip()
         if line.startswith("#EXTINF:"):
+            extinf_line = line
             # 从 EXTINF 标签中提取频道名
             parts = line.split(',', 1)
-            channel = parts[1] if len(parts) > 1 else "Unknown"
+            raw_channel = parts[1] if len(parts) > 1 else "Unknown"
+            channel = sanitize_channel_name(raw_channel, extinf_line)
             source_group_title = parse_group_title_from_extinf(line)
         elif line.startswith(('http://', 'https://')):
+            if looks_like_notice_entry(channel, source_group_title):
+                continue
             urls.append({
                 "channel": channel.strip(),
                 "url": line.strip(),
